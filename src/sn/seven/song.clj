@@ -2,7 +2,7 @@
   (:require [overtone.live :refer :all :exclude [stop sharp flat]]
             [leipzig.canon :refer [canon interval]]
             [leipzig.melody :refer :all]
-            [leipzig.scale :refer [high low raise lower sharp flat E B G minor major from]]
+            [leipzig.scale :refer [high low raise lower sharp flat E B G A minor major from]]
             [leipzig.live :as live]
             [leipzig.live :refer [stop]]
             [overtone.inst.drum :as drums]))
@@ -20,17 +20,9 @@
   (phrase [duration] [nil]))
 
 (def seven
-  (let [riff (->> [0 0 2 0 -1 -2 -3 -1]
-                   (phrase [1.5 0.5 0.75 0.75 0.5 2 2])
-                   ;(vary #(but 4 5.5 (phrase [0.75 0.75 0.5] [-2 -1 -2]) %))
-                   (times 4)
-                   ;(where :pitch raise)
-                   ;(where :pitch lower)
-                   (part :riff))
-        nation-army (->> (phrase (reps [13 1/2] [2 3/4] [1 1/2])
+  (let [nation-army (->> (phrase (reps [13 1/2] [2 3/4] [1 1/2])
                                  [0 4 4 3 3 2 2 1 1 0 0 -1 -1 0 0 0])
                          (after -1/2)
-                         ;(phrase (repeat 1) (concat (range 4 -2 -1) [0 0]))
                          (then (silence 8))
                          (times 2)
                          (part :melody))
@@ -66,10 +58,10 @@
               [0 0 2 0 -1 -2 -3 -1])
       (where :pitch lower)
       (part :riff)
-      (times 4)
-      (with nation-army)
-      (with bass beat)
-      (with #_sweet #_dreams)
+      ;(times 4)
+      ;(with nation-army)
+      ;(with bass #_beat)
+      ;(with sweet #_dreams)
       ;(then rise)
       (where :pitch (comp G minor))
       (tempo (bpm 120)))))
@@ -88,12 +80,12 @@
     (out:kr out-bus (lf-noise1:kr freq))))
 (defonce random-walk (audio-bus))
 (defonce walk (walker random-walk :freq (* 1/7 0.75)))
-(def resonance (mul-add (in:kr random-walk) 1500 3000))
+(def resonance (mul-add (in:kr random-walk) 880 3520))
 
 (definst sweetar [freq 110 dur 1.0 boost 5 vol 0.25 pan 0.0]
   (let [inst (-> (sin-osc freq)
                  (+ (* 4 (sin-osc (* 0.999 freq))))
-                 (+ (* 1 (sin-osc (* 1.5 freq))))
+                 (+ (* 8 (sin-osc (* 1.005 freq) 0.3)))
                  (+ (* 2 (sin-osc (* 4.003 freq))))
                  (+ (* 2 (sin-osc (* 0.501 freq))))
                  (* boost)
